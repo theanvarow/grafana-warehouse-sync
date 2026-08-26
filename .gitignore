@@ -1,0 +1,6 @@
+*.sqlite
+*.log
+__pycache__/
+.DS_Store
+exported_dashboards/
+*.csv
