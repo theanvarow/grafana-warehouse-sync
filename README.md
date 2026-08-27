@@ -18,6 +18,17 @@
 
 ---
 
+## 🔗 Быстрые ссылки и Демонстрация (Live Links & Demo)
+
+| Ресурс | Описание | Ссылка |
+| :--- | :--- | :--- |
+| 📊 **Grafana Dashboard** | Интерактивный аналитический дашборд | [Открыть в Grafana](http://localhost:3000/d/izlishka_employee_svod) |
+| 📋 **Google Sheets (WMS)** | Исходная рабочая таблица учета склада | [Открыть Google Таблицу](https://docs.google.com/spreadsheets/d/1vRYsfBey2qTmLf9iCkxSU4tb85e6nhYZzwaQ7DrMkII/edit?gid=1647276156#gid=1647276156) |
+| 🚀 **GitHub Repository** | Исходный код ETL-пайплайна и шаблоны дашбордов | [github.com/theanvarow/grafana-warehouse-sync](https://github.com/theanvarow/grafana-warehouse-sync) |
+| 📦 **Cloud Database** | Облачная реляционная СУБД (Serverless AWS) | [Neon Tech PostgreSQL](https://neon.tech/) |
+
+---
+
 ## 📌 О проекте (Project Overview)
 
 **Warehouse & Logistics Analytics Platform** — это комплексная система сбора, автоматической очистки и сквозной аналитики складских операций (ETL + Business Intelligence) в режиме реального времени.
