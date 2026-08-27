@@ -6,14 +6,24 @@ import time
 import os
 import sys
 
-SPREADSHEET_ID = "1vRYsfBey2qTmLf9iCkxSU4tb85e6nhYZzwaQ7DrMkII"
-IZLISHKA_GID = "2059071830"
-SGT_GID = "1647276156"
+# Load local .env if present
+env_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
+if os.path.exists(env_file):
+    with open(env_file, 'r', encoding='utf-8') as f:
+        for line in f:
+            line = line.strip()
+            if line and not line.startswith('#') and '=' in line:
+                k, v = line.split('=', 1)
+                os.environ.setdefault(k.strip(), v.strip())
+
+SPREADSHEET_ID = os.environ.get("SPREADSHEET_ID", "1vRYsfBey2qTmLf9iCkxSU4tb85e6nhYZzwaQ7DrMkII")
+IZLISHKA_GID = os.environ.get("IZLISHKA_GID", "2059071830")
+SGT_GID = os.environ.get("SGT_GID", "1647276156")
 
 IZLISHKA_CSV_URL = f"https://docs.google.com/spreadsheets/d/{SPREADSHEET_ID}/export?format=csv&gid={IZLISHKA_GID}"
 SGT_CSV_URL = f"https://docs.google.com/spreadsheets/d/{SPREADSHEET_ID}/export?format=csv&gid={SGT_GID}"
 
-NEON_URL = "postgresql://neondb_owner:npg_3TJdN6oyzPUx@ep-icy-sunset-aygvxck5-pooler.c-5.us-east-2.aws.neon.tech/neondb?sslmode=require"
+NEON_URL = os.environ.get("DATABASE_URL", "postgresql://neondb_owner:YOUR_DATABASE_PASSWORD@ep-icy-sunset-aygvxck5-pooler.c-5.us-east-2.aws.neon.tech/neondb?sslmode=require")
 
 try:
     import psycopg2
