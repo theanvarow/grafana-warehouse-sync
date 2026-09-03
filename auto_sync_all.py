@@ -23,7 +23,7 @@ SGT_GID = os.environ.get("SGT_GID", "1647276156")
 IZLISHKA_CSV_URL = f"https://docs.google.com/spreadsheets/d/{SPREADSHEET_ID}/export?format=csv&gid={IZLISHKA_GID}"
 SGT_CSV_URL = f"https://docs.google.com/spreadsheets/d/{SPREADSHEET_ID}/export?format=csv&gid={SGT_GID}"
 
-NEON_URL = os.environ.get("DATABASE_URL", "postgresql://neondb_owner:YOUR_DATABASE_PASSWORD@ep-icy-sunset-aygvxck5-pooler.c-5.us-east-2.aws.neon.tech/neondb?sslmode=require")
+NEON_URL = os.environ.get("DATABASE_URL", "postgresql://neondb_owner:npg_3TJdN6oyzPUx@ep-icy-sunset-aygvxck5-pooler.c-5.us-east-2.aws.neon.tech/neondb?sslmode=require")
 
 try:
     import psycopg2
@@ -32,14 +32,29 @@ try:
 except ImportError:
     HAS_PG = False
 
-def fetch_csv(url):
+def log(msg):
+    print(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] {msg}", flush=True)
+
+def fetch_csv(url, retries=3, timeout=30):
     cache_bust_url = f"{url}&_t={int(time.time())}" if "?" in url else f"{url}?_t={int(time.time())}"
-    req = urllib.request.Request(cache_bust_url, headers={"User-Agent": "Mozilla/5.0", "Cache-Control": "no-cache", "Pragma": "no-cache"})
-    with urllib.request.urlopen(req) as resp:
-        return resp.read().decode('utf-8')
+    for attempt in range(1, retries + 1):
+        try:
+            req = urllib.request.Request(cache_bust_url, headers={
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)",
+                "Cache-Control": "no-cache",
+                "Pragma": "no-cache"
+            })
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
+                return resp.read().decode('utf-8')
+        except Exception as e:
+            log(f"⚠️ fetch_csv attempt {attempt}/{retries} failed: {e}")
+            if attempt < retries:
+                time.sleep(3)
+            else:
+                raise e
 
 def sync_izlishka(cur_pg):
-    print(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] 📥 Fetching 'Излишка' Sheet...")
+    log("📥 Fetching 'Излишка' Sheet...")
     content = fetch_csv(IZLISHKA_CSV_URL)
     reader = csv.DictReader(io.StringIO(content))
     raw_data = []
@@ -60,7 +75,7 @@ def sync_izlishka(cur_pg):
         if barcode or employee != 'Не указан' or created_at:
             raw_data.append((barcode, cell, category, description, qty, status, employee, shift, created_at))
 
-    print(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] 📊 Fetched {len(raw_data)} rows for Излишка.")
+    log(f"📊 Fetched {len(raw_data)} rows for Излишка.")
 
     cur_pg.execute("""
     CREATE TABLE IF NOT EXISTS public.izlishka (
@@ -188,7 +203,7 @@ def sync_izlishka(cur_pg):
     """)
 
 def sync_sgt(cur_pg):
-    print(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] 📥 Fetching 'СГТ' Sheet...")
+    log("📥 Fetching 'СГТ' Sheet...")
     content = fetch_csv(SGT_CSV_URL)
     reader = csv.DictReader(io.StringIO(content))
     raw_data = []
@@ -211,7 +226,7 @@ def sync_sgt(cur_pg):
         if barcode or employee != 'Не указан' or created_at:
             raw_data.append((barcode, cell, category, description, qty, status, is_placed, employee, shift, created_at, product_id))
 
-    print(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] 📊 Fetched {len(raw_data)} rows for СГТ.")
+    log(f"📊 Fetched {len(raw_data)} rows for СГТ.")
 
     cur_pg.execute("""
     CREATE TABLE IF NOT EXISTS public.sgt (
@@ -342,27 +357,42 @@ def sync_sgt(cur_pg):
 
 def do_full_sync():
     if not HAS_PG:
-        print("psycopg2 not installed")
+        log("❌ psycopg2 not installed")
         return
+    conn = None
     try:
-        conn = psycopg2.connect(NEON_URL)
+        conn = psycopg2.connect(NEON_URL, connect_timeout=15)
         cur = conn.cursor()
         sync_izlishka(cur)
         sync_sgt(cur)
         conn.commit()
-        conn.close()
-        print(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] ✅ Full Sync Complete for both Излишка & СГТ!")
+        cur.close()
+        log("✅ Full Sync Complete for both Излишка & СГТ!")
     except Exception as e:
-        print(f"Sync error: {e}")
+        log(f"❌ Sync error: {e}")
+        if conn:
+            try:
+                conn.rollback()
+            except Exception:
+                pass
+    finally:
+        if conn:
+            try:
+                conn.close()
+            except Exception:
+                pass
 
 if __name__ == '__main__':
     interval = 60
     if len(sys.argv) > 1:
         try:
             interval = int(sys.argv[1])
-        except:
+        except Exception:
             pass
-    print(f"Starting Multi-Sheet Auto-Sync Daemon every {interval}s...")
+    log(f"🚀 Starting Multi-Sheet Auto-Sync Daemon every {interval}s...")
     while True:
-        do_full_sync()
+        try:
+            do_full_sync()
+        except Exception as e:
+            log(f"❌ Unexpected loop error: {e}")
         time.sleep(interval)
