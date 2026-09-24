@@ -1,0 +1,454 @@
+{
+  "id": null,
+  "panels": [
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "bfw4w68p7r5kwc"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "values": false
+        }
+      },
+      "targets": [
+        {
+          "queryText": "SELECT count(DISTINCT CASE WHEN status IN ('Собрано', 'Подтвержден') THEN barcode END) as value FROM izlishka WHERE substr(created_at, 1, 10) = (SELECT max(substr(created_at, 1, 10)) FROM izlishka WHERE created_at != '');",
+          "rawQueryText": "SELECT count(DISTINCT CASE WHEN status IN ('Собрано', 'Подтвержден') THEN barcode END) as value FROM izlishka WHERE substr(created_at, 1, 10) = (SELECT max(substr(created_at, 1, 10)) FROM izlishka WHERE created_at != '');",
+          "refId": "A"
+        }
+      ],
+      "title": "Собрано SKU (За день)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "bfw4w68p7r5kwc"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "purple",
+                "value": null
+              }
+            ]
+          }
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 4,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "values": false
+        }
+      },
+      "targets": [
+        {
+          "queryText": "SELECT sum(CASE WHEN status IN ('Собрано', 'Подтвержден') THEN quantity ELSE 0 END) as value FROM izlishka WHERE substr(created_at, 1, 10) = (SELECT max(substr(created_at, 1, 10)) FROM izlishka WHERE created_at != '');",
+          "rawQueryText": "SELECT sum(CASE WHEN status IN ('Собрано', 'Подтвержден') THEN quantity ELSE 0 END) as value FROM izlishka WHERE substr(created_at, 1, 10) = (SELECT max(substr(created_at, 1, 10)) FROM izlishka WHERE created_at != '');",
+          "refId": "A"
+        }
+      ],
+      "title": "Собрано Кол-во (шт) (За день)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "bfw4w68p7r5kwc"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              }
+            ]
+          }
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 8,
+        "y": 0
+      },
+      "id": 3,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "values": false
+        }
+      },
+      "targets": [
+        {
+          "queryText": "SELECT count(DISTINCT CASE WHEN status = 'Отсутствует' THEN barcode END) as value FROM izlishka WHERE substr(created_at, 1, 10) = (SELECT max(substr(created_at, 1, 10)) FROM izlishka WHERE created_at != '');",
+          "rawQueryText": "SELECT count(DISTINCT CASE WHEN status = 'Отсутствует' THEN barcode END) as value FROM izlishka WHERE substr(created_at, 1, 10) = (SELECT max(substr(created_at, 1, 10)) FROM izlishka WHERE created_at != '');",
+          "refId": "A"
+        }
+      ],
+      "title": "Отсутствует SKU (За день)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "bfw4w68p7r5kwc"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "orange",
+                "value": null
+              }
+            ]
+          }
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 12,
+        "y": 0
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "values": false
+        }
+      },
+      "targets": [
+        {
+          "queryText": "SELECT sum(CASE WHEN status = 'Отсутствует' THEN quantity ELSE 0 END) as value FROM izlishka WHERE substr(created_at, 1, 10) = (SELECT max(substr(created_at, 1, 10)) FROM izlishka WHERE created_at != '');",
+          "rawQueryText": "SELECT sum(CASE WHEN status = 'Отсутствует' THEN quantity ELSE 0 END) as value FROM izlishka WHERE substr(created_at, 1, 10) = (SELECT max(substr(created_at, 1, 10)) FROM izlishka WHERE created_at != '');",
+          "refId": "A"
+        }
+      ],
+      "title": "Отсутствует Кол-во (шт) (За день)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "bfw4w68p7r5kwc"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          }
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 16,
+        "y": 0
+      },
+      "id": 5,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "values": false
+        }
+      },
+      "targets": [
+        {
+          "queryText": "SELECT count(DISTINCT barcode) as value FROM izlishka WHERE substr(created_at, 1, 10) = (SELECT max(substr(created_at, 1, 10)) FROM izlishka WHERE created_at != '');",
+          "rawQueryText": "SELECT count(DISTINCT barcode) as value FROM izlishka WHERE substr(created_at, 1, 10) = (SELECT max(substr(created_at, 1, 10)) FROM izlishka WHERE created_at != '');",
+          "refId": "A"
+        }
+      ],
+      "title": "Всего SKU (За день)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "bfw4w68p7r5kwc"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "teal",
+                "value": null
+              }
+            ]
+          }
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 0
+      },
+      "id": 12,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "values": false
+        }
+      },
+      "targets": [
+        {
+          "queryText": "SELECT sum(quantity) as value FROM izlishka WHERE substr(created_at, 1, 10) = (SELECT max(substr(created_at, 1, 10)) FROM izlishka WHERE created_at != '');",
+          "rawQueryText": "SELECT sum(quantity) as value FROM izlishka WHERE substr(created_at, 1, 10) = (SELECT max(substr(created_at, 1, 10)) FROM izlishka WHERE created_at != '');",
+          "refId": "A"
+        }
+      ],
+      "title": "Всего Кол-во (шт) (За день)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "bfw4w68p7r5kwc"
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 4
+      },
+      "id": 11,
+      "options": {
+        "footer": {
+          "enablePagination": true,
+          "show": true
+        }
+      },
+      "targets": [
+        {
+          "queryText": "SELECT date_day as 'Дата', employee as 'ФИО сотрудника', confirmed_skus as 'Собрано SKU', confirmed_qty as 'Собрано Кол-во (шт)', missing_skus as 'Отсутствует SKU', missing_qty as 'Отсутствует Кол-во (шт)', total_skus as 'Всего SKU', total_qty as 'Всего Кол-во (шт)', total_ops as 'Всего операций' FROM izlishka_daily_employee_summary ORDER BY date_day DESC, total_qty DESC;",
+          "rawQueryText": "SELECT date_day as 'Дата', employee as 'ФИО сотрудника', confirmed_skus as 'Собрано SKU', confirmed_qty as 'Собрано Кол-во (шт)', missing_skus as 'Отсутствует SKU', missing_qty as 'Отсутствует Кол-во (шт)', total_skus as 'Всего SKU', total_qty as 'Всего Кол-во (шт)', total_ops as 'Всего операций' FROM izlishka_daily_employee_summary ORDER BY date_day DESC, total_qty DESC;",
+          "refId": "A"
+        }
+      ],
+      "title": "Ежедневный свод выработки по каждому сотруднику (Дата, ФИО, Собрано vs Отсутствует)",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "bfw4w68p7r5kwc"
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 16
+      },
+      "id": 10,
+      "options": {
+        "footer": {
+          "enablePagination": false,
+          "show": true
+        }
+      },
+      "targets": [
+        {
+          "queryText": "SELECT date_day as 'Дата', confirmed_skus as 'Собрано SKU', confirmed_qty as 'Собрано Кол-во (шт)', missing_skus as 'Отсутствует SKU', missing_qty as 'Отсутствует Кол-во (шт)', total_skus as 'Всего SKU', total_qty as 'Всего Кол-во (шт)', total_ops as 'Всего операций' FROM izlishka_daily_summary ORDER BY date_day DESC;",
+          "rawQueryText": "SELECT date_day as 'Дата', confirmed_skus as 'Собрано SKU', confirmed_qty as 'Собрано Кол-во (шт)', missing_skus as 'Отсутствует SKU', missing_qty as 'Отсутствует Кол-во (шт)', total_skus as 'Всего SKU', total_qty as 'Всего Кол-во (шт)', total_ops as 'Всего операций' FROM izlishka_daily_summary ORDER BY date_day DESC;",
+          "refId": "A"
+        }
+      ],
+      "title": "Ежедневный общий свод по дням (Дата, Собрано vs Отсутствует)",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "bfw4w68p7r5kwc"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 26
+      },
+      "id": 6,
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": [],
+          "fields": "",
+          "values": true
+        },
+        "showUnfilled": true
+      },
+      "targets": [
+        {
+          "queryText": "SELECT date_day as 'Дата', total_ops as 'Количество операций' FROM izlishka_daily_summary ORDER BY date_day ASC;",
+          "rawQueryText": "SELECT date_day as 'Дата', total_ops as 'Количество операций' FROM izlishka_daily_summary ORDER BY date_day ASC;",
+          "refId": "A"
+        }
+      ],
+      "title": "Динамика операций по дням",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "bfw4w68p7r5kwc"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 26
+      },
+      "id": 7,
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [],
+          "fields": "",
+          "values": true
+        },
+        "showUnfilled": true
+      },
+      "targets": [
+        {
+          "queryText": "SELECT employee as 'ФИО', total_quantity as 'Общее количество (шт)' FROM izlishka_employee_summary WHERE employee != 'Не указан' AND employee != '' ORDER BY total_quantity DESC LIMIT 15;",
+          "rawQueryText": "SELECT employee as 'ФИО', total_quantity as 'Общее количество (шт)' FROM izlishka_employee_summary WHERE employee != 'Не указан' AND employee != '' ORDER BY total_quantity DESC LIMIT 15;",
+          "refId": "A"
+        }
+      ],
+      "title": "Топ сотрудников по общему количеству товара (шт)",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "bfw4w68p7r5kwc"
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 34
+      },
+      "id": 8,
+      "options": {
+        "footer": {
+          "enablePagination": true,
+          "show": true
+        }
+      },
+      "targets": [
+        {
+          "queryText": "SELECT employee as 'ФИО сотрудника', unique_skus as 'Уникальных SKU', total_quantity as 'Количество (шт)', unique_cells as 'Уникальных ячеек', total_operations as 'Всего операций', confirmed_count as 'Собрано (Подтверждено)', missing_count as 'Отсутствует', first_operation as 'Первая операция (Дата/Время)', last_operation as 'Последняя операция (Дата/Время)' FROM izlishka_employee_summary WHERE employee != 'Не указан' AND employee != '' ORDER BY total_quantity DESC;",
+          "rawQueryText": "SELECT employee as 'ФИО сотрудника', unique_skus as 'Уникальных SKU', total_quantity as 'Количество (шт)', unique_cells as 'Уникальных ячеек', total_operations as 'Всего операций', confirmed_count as 'Собрано (Подтверждено)', missing_count as 'Отсутствует', first_operation as 'Первая операция (Дата/Время)', last_operation as 'Последняя операция (Дата/Время)' FROM izlishka_employee_summary WHERE employee != 'Не указан' AND employee != '' ORDER BY total_quantity DESC;",
+          "refId": "A"
+        }
+      ],
+      "title": "Сводная таблица по сотрудникам за весь период",
+      "type": "table"
+    }
+  ],
+  "refresh": "10s",
+  "schemaVersion": 39,
+  "tags": [
+    "izlishka",
+    "employees",
+    "summary",
+    "warehouse",
+    "daily"
+  ],
+  "timezone": "browser",
+  "title": "Излишка — Сводный отчет (Grafana Cloud)",
+  "uid": "izlishka_employee_svod",
+  "version": 12
+}
